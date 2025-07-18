@@ -3,8 +3,8 @@ import { Program } from "@coral-xyz/anchor";
 import { VotingDapp } from "../target/types/voting_dapp";
 
 describe("voting-dapp", () => {
-  // Configure the client to use the local cluster.
-  anchor.setProvider(anchor.AnchorProvider.env());
+  const provider = anchor.AnchorProvider.local()
+  anchor.setProvider(provider);
 
   const program = anchor.workspace.votingDapp as Program<VotingDapp>;
 
