@@ -1,8 +1,8 @@
 use anchor_lang::prelude::*;
 
 declare_id!("AWFGqGr4TpdDhWvSSDbx2fWwqQdsRGkjVMLoWpLdbPPe");
+use anchor_lang::solana_program::clock::Clock;
 
-#[program]
 pub mod voting_dapp {
     use super::*;
 
@@ -33,7 +33,7 @@ pub mod voting_dapp {
         Ok(())
     }
 
-    pub fn vote(ctx: Context<Vote>, _poll_id: u64, candidate_name: String) -> Result<()> {
+    pub fn vote(ctx: Context<Vote>, _poll_id: u64, _candidate_name: String) -> Result<()> {
         let poll = &mut ctx.accounts.poll;
         let candidate = &mut ctx.accounts.candidate;
 
@@ -107,6 +107,15 @@ pub struct Vote<'info> {
     )]
     pub candidate: Account<'info, Candidate>,
 
+    #[account(
+        init,
+        payer = voter,
+        space = 8 + VoteRecord::INIT_SPACE,
+        seeds = [b"vote_record".as_ref(), voter.key().as_ref(), poll_id.to_le_bytes().as_ref()],
+        bump,
+    )]
+    pub vote_record: Account<'info, VoteRecord>,
+
     pub system_program: Program<'info, System>,
 }
 
@@ -128,6 +137,13 @@ pub struct Candidate {
     #[max_len(32)]
     pub candidate_name: String,
     pub candidate_votes: u64,
+}
+
+#[account]
+#[derive(InitSpace)]
+pub struct VoteRecord {
+    pub voter: Pubkey,
+    pub poll_id: u64,
 }
 
 #[error_code]
