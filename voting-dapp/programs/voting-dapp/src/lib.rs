@@ -1,8 +1,9 @@
 use anchor_lang::prelude::*;
 
-declare_id!("AWFGqGr4TpdDhWvSSDbx2fWwqQdsRGkjVMLoWpLdbPPe");
+declare_id!("2vtvbTieKratMzskNCjBbEdeR2S1kYDYhw7dsN27rqV1");
 use anchor_lang::solana_program::clock::Clock;
 
+#[program]
 pub mod voting_dapp {
     use super::*;
 
@@ -42,6 +43,7 @@ pub mod voting_dapp {
             current_time >= poll.voting_start,
             CustomError::VotingNotStarted
         );
+
         require!(current_time <= poll.voting_end, CustomError::VotingEnded);
 
         candidate.candidate_votes += 1;

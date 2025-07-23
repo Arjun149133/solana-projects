@@ -8,8 +8,11 @@ import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { NextRequest } from "next/server";
 import { VotingDapp } from "@/../target/types/voting_dapp";
 import { BN, Program } from "@coral-xyz/anchor";
+import fs from "fs";
+import path from "path";
 
-const IDL = require("@/../target/idl/voting_dapp.json");
+const idlpath = path.resolve(process.cwd(), "../target/idl/voting_dapp.json");
+const IDL = JSON.parse(fs.readFileSync(idlpath, "utf8")) as VotingDapp;
 
 export const OPTIONS = GET;
 

@@ -14,7 +14,7 @@ describe("voting-dapp", () => {
     try {
       const tx = await program.methods
         .initializePoll(
-          new anchor.BN(1), // pollId
+          new anchor.BN(2), // pollId
           "Test Poll", // pollName
           "This is a test poll", // description
           new anchor.BN(Date.now() / 1000 - 86400), // votingStart (1 day ago)
@@ -23,12 +23,12 @@ describe("voting-dapp", () => {
         .rpc();
       console.log("Your transaction signature", tx);
     } catch (error) {
-      console.error("Error initializing poll:", error.getLogs());
+      console.error("Error initializing poll:", error);
     }
   });
 
   it("initialize candidates", async () => {
-    const pollIdBuffer = new anchor.BN(1).toArrayLike(Buffer, "le", 8);
+    const pollIdBuffer = new anchor.BN(2).toArrayLike(Buffer, "le", 8);
 
     const [pollAddress] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("poll"), pollIdBuffer],
@@ -38,33 +38,33 @@ describe("voting-dapp", () => {
     // Add your test here.
     try {
       const tx = await program.methods
-        .initializeCandidate(new anchor.BN(1), "Candidate 1")
+        .initializeCandidate(new anchor.BN(2), "Candidate 1")
         .accounts({
           pollAccount: pollAddress,
         })
         .rpc();
       console.log("Your transaction signature for candidate 1", tx);
     } catch (error) {
-      console.error("Error initializing candidate 1:", error.getLogs());
+      console.error("Error initializing candidate 1:", error);
     }
 
     try {
       const tx2 = await program.methods
-        .initializeCandidate(new anchor.BN(1), "Candidate 2")
+        .initializeCandidate(new anchor.BN(2), "Candidate 2")
         .accounts({
           pollAccount: pollAddress,
         })
         .rpc();
       console.log("Your transaction signature for candidate 2", tx2);
     } catch (error) {
-      console.error("Error initializing candidate 2:", error.getLogs());
+      console.error("Error initializing candidate 2:", error.getLogs);
     }
   });
 
   it("vote", async () => {
     try {
       const tx = await program.methods
-        .vote(new anchor.BN(1), "Candidate 1")
+        .vote(new anchor.BN(2), "Candidate 1")
         .rpc();
 
       console.log("Your transaction signature for voting", tx);
@@ -76,7 +76,7 @@ describe("voting-dapp", () => {
     const candidateAccount = await program.account.candidate.fetch(
       anchor.web3.PublicKey.findProgramAddressSync(
         [
-          new anchor.BN(1).toArrayLike(Buffer, "le", 8),
+          new anchor.BN(2).toArrayLike(Buffer, "le", 8),
           new TextEncoder().encode("Candidate 1"),
         ],
         program.programId
